@@ -1,0 +1,114 @@
+======================================================
+🚀 ASP.NET CORE & TAILWIND CSS MASTER CHEAT SHEET
+======================================================
+
+------------------------------------------------------
+▶️ DAILY WORKFLOW (HOW TO START DEVELOPING)
+------------------------------------------------------
+Because you are using ASP.NET Core with Tailwind CSS,
+you need to run TWO commands in TWO separate terminal tabs.
+
+PREREQUISITE (Do this once in package.json):
+Under "scripts", add: 
+"dev": "npx @tailwindcss/cli -i ./wwwroot/css/site.css -o ./wwwroot/css/app.css --watch"
+
+TERMINAL 1 (The Backend):
+dotnet watch
+
+TERMINAL 2 (The Frontend/CSS):
+npm run dev
+
+
+------------------------------------------------------
+1. PROJECT SETUP & EXECUTION
+------------------------------------------------------
+Create a new MVC project:
+dotnet new mvc -n MyProjectName
+
+Run normally (No auto-refresh):
+dotnet run
+
+Build the project (Check for compile errors without running):
+dotnet build
+
+Clean the project (Deletes old corrupted build files):
+dotnet clean
+
+
+------------------------------------------------------
+2. CREATING CONTROLLERS & FILES
+------------------------------------------------------
+Create an empty MVC Controller (Outputs to /Controllers):
+dotnet new mvccontroller --name YourControllerName --output Controllers
+
+Create an empty API Controller (Outputs to /Controllers):
+dotnet new apicontroller --name YourApiController --output Controllers
+
+Create a standard C# Class (For Models, Services, etc.):
+dotnet new class --name YourModelName --output Models
+
+
+------------------------------------------------------
+3. PACKAGE MANAGEMENT (NuGet)
+------------------------------------------------------
+Add a package to your project:
+dotnet add package PackageName
+
+Example - Add Entity Framework for SQLite:
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+Remove a package from your project:
+dotnet remove package PackageName
+
+List all installed packages:
+dotnet list package
+
+
+------------------------------------------------------
+4. ENTITY FRAMEWORK CORE (DATABASE & MIGRATIONS)
+------------------------------------------------------
+*Prerequisite (Run once per computer):* dotnet tool install --global dotnet-ef
+
+Create a new Migration (Takes a snapshot of your C# Models):
+dotnet ef migrations add MigrationName
+(Example: dotnet ef migrations add AddUserTable)
+
+Update the Database (Applies migrations to the actual DB):
+dotnet ef database update
+
+Remove the last Migration (ONLY if you haven't updated the DB yet!):
+dotnet ef migrations remove
+
+Drop/Delete the entire database:
+dotnet ef database drop
+
+
+------------------------------------------------------
+5. TAILWIND CSS v4 (INITIAL SETUP)
+------------------------------------------------------
+Initialize a new Node project (Creates package.json):
+npm init -y
+
+Install Tailwind CSS v4 CLI:
+npm install -D @tailwindcss/cli
+
+
+------------------------------------------------------
+6. EMERGENCY FIXES (WINDOWS)
+------------------------------------------------------
+Force kill a stuck ASP.NET process ("File is locked" error):
+taskkill /f /im YourAppName.exe
+(Replace 'YourAppName' with the name of your project)
+
+
+------------------------------------------------------
+💡 PRO-TIP: MVC FOLDER STRUCTURE REMINDER
+------------------------------------------------------
+If your views aren't loading, always check this exact structure:
+
+1. Controllers/AccountController.cs  (Matches the Folder)
+2. public IActionResult Login()      (Matches the File)
+3. Views/Account/Login.cshtml        (The Destination)
+======================================================
+
