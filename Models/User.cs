@@ -9,10 +9,12 @@ namespace MyMvcApp.Models
         public int Id { get; set; }
 
         // [Required] tells the database this column cannot be NULL
-        [Required]
+        [Required(ErrorMessage = "Please provide a valid email")]
+        [StringLength(50, MinimumLength = 5, ErrorMessage = "Email must be between 5 and 50 characters")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter your password")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters")]
         public string Password { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;

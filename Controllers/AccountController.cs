@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MyMvcApp.Models;
-using MyMvcApp.Data; // 1. Add this to access AppDbContext
-using System.Linq;   // 2. Add this to use database querying commands (LINQ)
+using MyMvcApp.Data; 
+using System.Linq;
+using Microsoft.VisualBasic;
+using SQLitePCL;
+using System.Reflection.Metadata.Ecma335;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MyMvcApp.Controllers
 {
@@ -64,6 +68,33 @@ namespace MyMvcApp.Controllers
             }
 
             return Content("A user already exists in the database!");
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(LoginViewModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            //translate the ViewModel into a real database model
+            var newUser = new User
+            {
+                Email = model.Email,
+                Password = model.Password
+            };
+
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            return RedirectToAction("Login");
         }
     }
 }
