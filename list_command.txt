@@ -36,7 +36,7 @@ dotnet clean
 
 
 ------------------------------------------------------
-2. CREATING CONTROLLERS & FILES
+2. CREATING CONTROLLERS & MODELS
 ------------------------------------------------------
 Create an empty MVC Controller (Outputs to /Controllers):
 dotnet new mvccontroller --name YourControllerName --output Controllers
@@ -47,6 +47,8 @@ dotnet new apicontroller --name YourApiController --output Controllers
 Create a standard C# Class (For Models, Services, etc.):
 dotnet new class --name YourModelName --output Models
 
+Create and empty MVC Model (Output to / Models):
+dotnet new class --name YourModelName --output Models
 
 ------------------------------------------------------
 3. PACKAGE MANAGEMENT (NuGet)

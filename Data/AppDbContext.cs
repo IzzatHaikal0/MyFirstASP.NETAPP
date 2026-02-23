@@ -13,5 +13,7 @@ namespace MyMvcApp.Data
 
         // IMPORTANT: Every DbSet you add here becomes a literal TABLE in your database!
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Sport> Sports { get; set; }
     }
 }
