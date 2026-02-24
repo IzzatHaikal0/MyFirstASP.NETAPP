@@ -15,5 +15,7 @@ namespace MyMvcApp.Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<Sport> Sports { get; set; }
+
+        public DbSet<Category> Category { get; set; }
     }
 }

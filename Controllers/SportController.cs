@@ -21,8 +21,7 @@ namespace MyMvcApp.Namespace
 
         // Display list of sports from db
         public IActionResult Index()
-        {
-            
+        { 
             var SportsList = _context.Sports.ToList();
             return View(SportsList);
         }
@@ -64,8 +63,10 @@ namespace MyMvcApp.Namespace
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public IActionResult Edit(int id)
         {
+            //declare variable and fetch the data based on given id
             var sportToEdit = _context.Sports.Find(id);
 
             //handle not found
@@ -84,7 +85,7 @@ namespace MyMvcApp.Namespace
             _context.Sports.Update(sport);
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }
