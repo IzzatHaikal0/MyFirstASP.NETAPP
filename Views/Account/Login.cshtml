@@ -1,7 +1,7 @@
 @model MyMvcApp.Models.LoginViewModel
 
 @section title{
-    <h1 class="display-4">Sport</h1>
+    <h1 class="hidden">Sport</h1>
 }
 
 <div class="min-h-[80vh] flex items-center justify-center bg-gray-50 py-12 px-4">
@@ -17,17 +17,15 @@
             </p>
         </div>
 
-        @if (ViewBag.ErrorMessage != null)
+        @if (!ViewData.ModelState.IsValid)
         {
-        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-            <div class="flex">
-                <div class="ml-3">
-                    <p class="text-sm text-red-700 font-medium">
-                        @ViewBag.ErrorMessage
-                    </p>
+            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+                <div class="flex">
+                    <div class="ml-3">
+                        <div asp-validation-summary="All" class="text-sm text-red-700 font-medium"></div>
+                    </div>
                 </div>
             </div>
-        </div>
         }
 
         <form asp-controller="Account" asp-action="Login" method="post" class="space-y-6">

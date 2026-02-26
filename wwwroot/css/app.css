@@ -1001,9 +1001,6 @@
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
-  .px-8 {
-    padding-inline: calc(var(--spacing) * 8);
-  }
   .py-0 {
     padding-block: calc(var(--spacing) * 0);
   }
@@ -1235,9 +1232,6 @@
   .text-gray-900 {
     color: var(--color-gray-900);
   }
-  .text-green-700 {
-    color: var(--color-green-700);
-  }
   .text-indigo-800 {
     color: var(--color-indigo-800);
   }
@@ -1270,9 +1264,6 @@
   }
   .line-through {
     text-decoration-line: line-through;
-  }
-  .no-underline {
-    text-decoration-line: none;
   }
   .underline {
     text-decoration-line: underline;

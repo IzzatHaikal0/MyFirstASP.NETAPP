@@ -6,23 +6,27 @@ using Microsoft.VisualBasic;
 using SQLitePCL;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
+using MyMvcApp.Services;
 
 namespace MyMvcApp.Namespace
 {
+    [Authorize]
     public class SportController : Controller
     {
-            
-        private readonly AppDbContext _context;
-
-        public SportController(AppDbContext context)
+        //declare db connection    
+        private readonly ISportService _sportService;
+        
+        //connect controller to db
+        public SportController(ISportService sportService)
         {
-            _context = context;
+            _sportService = sportService;
         }
 
         // Display list of sports from db
         public IActionResult Index()
         { 
-            var SportsList = _context.Sports.ToList();
+            var SportsList = _sportService.GetAllSports();
             return View(SportsList);
         }
 
@@ -43,8 +47,7 @@ namespace MyMvcApp.Namespace
                 //Return the View and send the bad data back so they don't lose what they typed.
                 return View(sport);
             }
-            _context.Sports.Add(sport);
-            _context.SaveChanges();
+            _sportService.CreateSport(sport);
         
             return RedirectToAction("Index");
         }
@@ -52,12 +55,11 @@ namespace MyMvcApp.Namespace
         //delete the sport from db (Select based on id)
         public IActionResult Delete(int id)
         {
-            var sportToDelete = _context.Sports.Find(id);
+            var sportToDelete = _sportService.GetSportById(id);
 
             if(sportToDelete != null)
             {
-                _context.Sports.Remove(sportToDelete);
-                _context.SaveChanges();
+                _sportService.DeleteSport(sportToDelete);
             }
 
             return RedirectToAction("Index");
@@ -67,7 +69,7 @@ namespace MyMvcApp.Namespace
         public IActionResult Edit(int id)
         {
             //declare variable and fetch the data based on given id
-            var sportToEdit = _context.Sports.Find(id);
+            var sportToEdit = _sportService.GetSportById(id);
 
             //handle not found
             if(sportToEdit == null)
@@ -82,8 +84,7 @@ namespace MyMvcApp.Namespace
         [HttpPost]
         public IActionResult Edit(Sport sport)
         {
-            _context.Sports.Update(sport);
-            _context.SaveChanges();
+            _sportService.UpdateSport(sport);
 
             return RedirectToAction(nameof(Index));
         }

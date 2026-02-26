@@ -4,29 +4,25 @@ using MyMvcApp.Data;
 using System.Linq;
 using SQLitePCL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using MyMvcApp.Services;
 
 namespace MyMvcApp.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryService _categoryServices;
 
-        public CategoryController(AppDbContext context)
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryServices = categoryService;
         }
         // GET: CategoryController
         public IActionResult Index()
         {
-            var CategoryList = _context.Category.ToList();
+            var CategoryList = _categoryServices.GetAllCategories();
             return View(CategoryList);
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            var Category = new Category { CategoryId = id.HasValue?id.Value:0}; //create instance of model
-
-            return View(Category);
         }
 
         [HttpGet]
@@ -42,30 +38,28 @@ namespace MyMvcApp.Controllers
             {
                 return View(category);
             }
-            _context.Category.Add(category);
-            _context.SaveChanges();
+            _categoryServices.CreateCategory(category);//here we call the category service
 
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
+
         public IActionResult Edit(int id)
         {
-            var categoryToEdit = _context.Category.Find(id);
+            var Category = _categoryServices.GetCategoryById(id); 
 
-            if(categoryToEdit == null)
+            if(Category == null)
             {
                 return NotFound();
             }
 
-            return View(categoryToEdit);
+            return View(Category);
         }
 
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            _context.Category.Update(category);
-            _context.SaveChanges();
+            _categoryServices.UpdateCategory(category);
 
             return RedirectToAction("Index");
         }
@@ -73,12 +67,11 @@ namespace MyMvcApp.Controllers
     
         public IActionResult Delete(int id)
         {
-            var categoryToDelete = _context.Category.Find(id);
+            var categoryToDelete = _categoryServices.GetCategoryById(id);
             
             if(categoryToDelete != null)
             {
-                _context.Category.Remove(categoryToDelete);
-                _context.SaveChanges();
+                _categoryServices.DeleteCategory(categoryToDelete);
             }
 
             return RedirectToAction("Index");

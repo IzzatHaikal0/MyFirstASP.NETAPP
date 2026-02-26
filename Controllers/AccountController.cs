@@ -1,20 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using MyMvcApp.Models;
 using MyMvcApp.Data; 
-using System.Linq;
-using Microsoft.VisualBasic;
-using SQLitePCL;
-using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MyMvcApp.Controllers
 {
     public class AccountController : Controller
     {
-        // 3. Create a private variable to hold the database connection
+        // database connection
         private readonly AppDbContext _context;
 
-        // 4. THE MAGIC (Dependency Injection): 
         // When ASP.NET Core creates this controller, it automatically passes in the database!
         public AccountController(AppDbContext context)
         {
@@ -28,20 +26,45 @@ namespace MyMvcApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            // 5. THE QUERY: Ask the database if a user exists with this email AND password
-            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
-
-            if (user != null)
+            if(!ModelState.IsValid)
             {
-                // Success! We found a matching user in the database.
-                return RedirectToAction("Index", "Home");
+                return View(model);
             }
 
-            // Failed! The user variable came back as 'null' (not found).
-            ViewBag.ErrorMessage = "Invalid email or password.";
-            return View(model); 
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+
+            if(user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                return View(model);
+            }
+
+            // 2. The user is real! Let's write their info on the "Wristband" (Claims)
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            // 3. Package the wristband up (Identity & Principal)
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            // 4. THE MAGIC: Hand the secure Cookie to their browser!
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Send them to the Home page after a successful login
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Login", "Account");
         }
 
         // ---------------------------------------------------------
