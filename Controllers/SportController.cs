@@ -97,5 +97,12 @@ namespace MyMvcApp.Namespace
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Select()
+        {
+            var SportsList = _sportService.GetAllSports();
+            return View("Customer/Select", SportsList);
+        }
     }
 }

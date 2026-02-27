@@ -18,5 +18,9 @@ namespace MyMvcApp.Models
         public string Password { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Required]
+        public string Role { get; set;} = "Admin";
+
     }
 }

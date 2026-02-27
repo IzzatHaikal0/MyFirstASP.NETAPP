@@ -1,0 +1,61 @@
+@model IEnumerable<MyMvcApp.Models.Sport>
+
+@section title {
+    <h1 class="hidden">Welcome</h1>
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen">
+    
+    <div class="text-center mb-16 relative">
+        <h1 class="text-5xl font-extrabold tracking-tight mb-4">
+            <span class="bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-indigo-600">
+                Discover Your Sport
+            </span>
+        </h1>
+        <p class="text-xl text-gray-500 max-w-2xl mx-auto">Browse our collection of sports and find your next passion.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach (var sport in Model)
+        {
+            <div class="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col border border-gray-100 overflow-hidden  mb-4">
+                
+                <div class="h-2 w-full bg-linear-to-r from-blue-500 to-indigo-500"></div>
+                
+                <div class="p-8 grow">
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/10">
+                            @(sport.Category?.Name ?? "Uncategorized")
+                        </span>
+                        
+                        <div class="text-gray-200 group-hover:text-indigo-100 transition-colors duration-300">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">@sport.Name</h3>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 mt-6 flex items-center border border-gray-100">
+                        <div class="bg-white p-2.5 rounded-lg shadow-sm text-blue-600 mr-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">Team Size</p>
+                            <p class="text-sm font-bold text-gray-900">@sport.PlayersPerTeam Players</p>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="p-6 pt-0 mt-auto bg-white">
+                    <button type="button" class="w-full relative flex items-center justify-center bg-white text-gray-900 border-2 border-gray-200 font-bold py-3 px-4 rounded-xl hover:bg-gray-50 hover:border-blue-600 hover:text-blue-600 transition-all duration-200 group/btn shadow-sm">
+                        <span>Select This Sport</span>
+                        
+                        <svg class="w-5 h-5 ml-2 transform group-hover/btn:translate-x-1.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,12 +1,18 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MyMvcApp.Models;
+using SQLitePCL;
 
 namespace MyMvcApp.Controllers;
 
 public class HomeController : Controller
 {
     public IActionResult Index()
+    {
+        return View();
+    }
+
+    public IActionResult CustomerHome()
     {
         return View();
     }

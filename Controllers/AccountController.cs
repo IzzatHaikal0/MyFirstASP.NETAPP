@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Diagnostics;
 
 namespace MyMvcApp.Controllers
 {
@@ -33,7 +34,7 @@ namespace MyMvcApp.Controllers
                 return View(model);
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password && u.Role == model.Role);
 
             if(user == null)
             {
@@ -45,7 +46,8 @@ namespace MyMvcApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             // 3. Package the wristband up (Identity & Principal)
@@ -55,8 +57,16 @@ namespace MyMvcApp.Controllers
             // 4. THE MAGIC: Hand the secure Cookie to their browser!
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+
             // Send them to the Home page after a successful login
-            return RedirectToAction("Index", "Home");
+            if(user.Role == "Admin")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return RedirectToAction("CustomerHome", "Home");
+            }
         }
 
         [HttpGet]
@@ -65,32 +75,6 @@ namespace MyMvcApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login", "Account");
-        }
-
-        // ---------------------------------------------------------
-        // TEMPORARY HELPER: We need a way to put a user in our empty database!
-        // ---------------------------------------------------------
-        [HttpGet]
-        public IActionResult CreateTestUser()
-        {
-            // Check if our database is completely empty
-            if (!_context.Users.Any())
-            {
-                // Create a new User object
-                var newUser = new User 
-                { 
-                    Email = "admin@test.com", 
-                    Password = "password123" 
-                };
-
-                // Add it to the database and save!
-                _context.Users.Add(newUser);
-                _context.SaveChanges();
-
-                return Content("Success! Test user created. Go back to /Account/Login to test it.");
-            }
-
-            return Content("A user already exists in the database!");
         }
 
         [HttpGet]
@@ -111,7 +95,8 @@ namespace MyMvcApp.Controllers
             var newUser = new User
             {
                 Email = model.Email,
-                Password = model.Password
+                Password = model.Password,
+                Role = model.Role
             };
 
             _context.Users.Add(newUser);
