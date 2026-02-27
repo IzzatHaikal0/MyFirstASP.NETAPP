@@ -8,6 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
 using MyMvcApp.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MyMvcApp.Namespace
 {
@@ -16,11 +17,13 @@ namespace MyMvcApp.Namespace
     {
         //declare db connection    
         private readonly ISportService _sportService;
+        private readonly ICategoryService _categoryService;
         
         //connect controller to db
-        public SportController(ISportService sportService)
+        public SportController(ISportService sportService, ICategoryService categoryService)
         {
             _sportService = sportService;
+            _categoryService = categoryService;
         }
 
         // Display list of sports from db
@@ -34,6 +37,9 @@ namespace MyMvcApp.Namespace
         [HttpGet]
         public IActionResult Create()
         {
+            var categories = _categoryService.GetAllCategories();
+            ViewBag.CategoryId = new SelectList(categories, "CategoryId", "Name");
+
             return View();
         }
         
@@ -44,6 +50,9 @@ namespace MyMvcApp.Namespace
             //validate data receive
             if(!ModelState.IsValid)
             {
+                //validate the data, if wrong, send the list back
+                var categories = _categoryService.GetAllCategories();
+                ViewBag.CategoryId = new SelectList(categories, "CategoryId", "Name");
                 //Return the View and send the bad data back so they don't lose what they typed.
                 return View(sport);
             }

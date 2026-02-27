@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyMvcApp.Models
 {
@@ -13,5 +14,11 @@ namespace MyMvcApp.Models
         [Required(ErrorMessage = "Please provide the number or players per team")]
         [Range(1, 100, ErrorMessage = "Players per team must be between 1 and 100 players")]
         public int PlayersPerTeam {get; set;}
+
+        //fk relation
+        [Required]
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+        public Category? Category { get; set;}
     }
 }

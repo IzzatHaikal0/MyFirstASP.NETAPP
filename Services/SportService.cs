@@ -3,7 +3,7 @@ using MyMvcApp.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
-
+using Microsoft.EntityFrameworkCore;
 namespace MyMvcApp.Services
 {
     public class SportService : ISportService
@@ -17,7 +17,7 @@ namespace MyMvcApp.Services
 
         public List<Sport> GetAllSports()
         {
-            return _context.Sports.ToList();
+            return _context.Sports.Include(sport => sport.Category).ToList();
         }
 
         public Sport GetSportById(int id)
